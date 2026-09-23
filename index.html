@@ -283,6 +283,11 @@ h1,h2,h3{font-family:var(--pop)}
 .steps em{background:var(--p-cor); color:var(--pk); border:1.5px solid var(--pk); box-shadow:2px 2px var(--pk)}
 .steps em.g{background:var(--p-grn)}
 .concept .joke{color:var(--red)}
+/* 3ステップの下の説明は小さく */
+.concept .steps ~ p{font-size:13px; line-height:1.65; margin:0 0 6px}
+.concept .steps + p{font-size:14px}
+.concept .tiny{font-size:12px}
+.tabs-lead{font-size:13px}
 
 /* 版のタブ */
 .tab{border:1.5px solid var(--ink); border-radius:13px; box-shadow:3px 3px var(--sh)}
