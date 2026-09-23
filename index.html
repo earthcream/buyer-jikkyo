@@ -208,6 +208,7 @@ button{font-family:inherit}
 .c.new{animation:slide .4s; background:color-mix(in srgb,var(--red) 8%,transparent); border-radius:0 6px 6px 0}
 @keyframes slide{from{opacity:0; transform:translateX(10px)}}
 .c.mine{border-left-color:var(--red)}
+.c.hit{background:color-mix(in srgb,var(--yel) 22%,transparent); border-left-color:var(--yel-d); border-radius:0 6px 6px 0; padding:4px 8px 6px 12px}
 .c .m{display:flex; flex-wrap:wrap; gap:0 8px; align-items:baseline; font-size:13px; color:var(--ink-2); margin-bottom:2px}
 .c .m b{color:var(--ink); font-family:"M PLUS Rounded 1c",sans-serif; font-size:14.5px}
 .c .m .ln{font-family:ui-monospace,monospace; font-size:12.5px; background:var(--soft); border-radius:4px; padding:0 6px}
@@ -709,23 +710,28 @@ function renderFeed(newId){
     $("toLatest").addEventListener("click",function(){ selectVersion(LATEST); });
     return;
   }
-  var list=shown.filter(function(c){ return filterLine===null || c.line===filterLine; });
+  // ツッコミは常に全部見せる。発言を選んだときは、その発言へのツッコミを上にまとめて目立たせる
+  var list=shown.slice();
+  var hits=filterLine===null?0:list.filter(function(c){ return c.line===filterLine; }).length;
   if(filterLine!==null){
     f.hidden=false;
-    f.innerHTML='<span>'+num(filterLine)+' 行目へのツッコミ '+list.length+'件</span><button type="button" id="clrF">全部に戻す</button>';
+    f.innerHTML='<span>'+(hits?num(filterLine)+' 行目へのツッコミ '+hits+'件を上にまとめました。ほかのツッコミも下に続きます':num(filterLine)+' 行目へのツッコミはまだありません。最初の一人になってください')+'</span><button type="button" id="clrF">並びを戻す</button>';
     $("clrF").addEventListener("click",function(){ filterLine=null; renderFeed(); });
   } else { f.hidden=true; f.innerHTML=""; }
   if(!list.length){
-    feed.innerHTML='<p class="empty">'+(filterLine!==null?"この発言へのツッコミはまだありません。最初の一人になってください。":"まだツッコミはありません。")+'</p>';
+    feed.innerHTML='<p class="empty">まだツッコミはありません。</p>';
     return;
   }
   if(sortMode==="top"){ list.sort(function(a,b){return score(b)-score(a)}); }
   else{ list.sort(function(a,b){ var x=a.line===null?999:a.line, y=b.line===null?999:b.line; return (x-y)||(a.t-b.t); }); }
+  if(filterLine!==null){
+    list=list.filter(function(c){ return c.line===filterLine; }).concat(list.filter(function(c){ return c.line!==filterLine; }));
+  }
   feed.innerHTML="";
   list.forEach(function(c){
     var v=votes[c.id]||0, cnt=counts(c), up=cnt[0], dn=cnt[1];
     var d=document.createElement("div");
-    d.className="c"+(c.mine?" mine":"")+(c.id===newId?" new":"");
+    d.className="c"+(c.mine?" mine":"")+(c.id===newId?" new":"")+(filterLine!==null&&c.line===filterLine?" hit":"");
     d.setAttribute("data-id",c.id);
     d.innerHTML='<div class="m"><b>'+esc(c.name)+'</b>'+(c.org?'<span>'+esc(c.org)+'</span>':'')+
       '<span class="ln">'+(c.line===null?"全体":num(c.line)+"行目")+'</span>'+
@@ -821,7 +827,7 @@ function selectTarget(n){
   if(archived()){ $("hint").textContent="#1 はツッコミの受付を終えています。最新の #"+LATEST+" でどうぞ。"; return; }
   target=n; filterLine=n; updateComposer(); renderFeed();
   $("sentNote").hidden=true;
-  $("hint").textContent="停止中。「みんなのツッコミ」欄に書いて送ってください。この発言へのほかの人のツッコミも出ています。続きは「▶ 続きから」。";
+  $("hint").textContent="停止中。「みんなのツッコミ」欄に書いて送ってください。この発言へのツッコミは一覧の上にまとめました。続きは「▶ 続きから」。";
   if(window.innerWidth<900){ $("compBox").scrollIntoView({behavior:"smooth",block:"start"}); }
   $("tsukkomi").focus({preventScroll:window.innerWidth>=900});
 }
