@@ -5,7 +5,7 @@
 <title>池田史子の交渉ライブ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&family=Noto+Sans+JP:wght@400;500;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=M+PLUS+Rounded+1c:wght@400;700;800&family=Noto+Sans+JP:wght@400;500;700&family=Zen+Maru+Gothic:wght@700;900&display=swap">
 <style>
 :root{
   --mat:#E4E0D6; --mat-2:#D6D1C4; --ink:#17181C; --ink-2:#55575E;
@@ -243,7 +243,111 @@ tbody th{font-weight:500; color:var(--ink-2); font-size:14px; white-space:nowrap
 td.b{color:var(--red)} td.g{color:var(--grn); font-weight:700} td.m{color:var(--ink)}
 .cur{background:color-mix(in srgb,var(--blu) 10%,transparent)}
 .foot{font-size:14px; color:var(--ink-2); padding:12px 18px 16px; margin:0; line-height:1.75}
-</style>
+
+/* ===== POP版（ここから下を消すとレゴ版の見た目に戻る） ===== */
+:root{
+  --mat:#FAF6EC; --mat-2:#EDF3E5; --ink:#253D35; --ink-2:#5C6C60;
+  --panel:#FFFEFA; --line:#A4B09B; --soft:#F2F6E9;
+  --red:#C2553F; --red-d:#253D35; --yel:#FFE56C; --yel-d:#253D35;
+  --blu:#3E8FA3; --blu-d:#253D35; --grn:#2F7A3A; --grn-d:#253D35;
+  --pk:#253D35; /* パステルの上の文字色（暗い背景でも固定） */
+  --p-yel:#FFE56C; --p-blu:#B2DFE7; --p-grn:#C5E8C5; --p-pnk:#E5CCEB; --p-cor:#FFB4A2; --p-cream:#FFF3C2;
+  --sh:#DCE1CF; --pop:"Zen Maru Gothic","M PLUS Rounded 1c","Noto Sans JP",sans-serif;
+}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+  --mat:#1C2320; --mat-2:#26302C; --ink:#EEF0E6; --ink-2:#AEB8AE; --panel:#242C29; --line:#4A5750; --soft:#2B3431;
+  --red:#FF9C85; --grn:#8FD49A; --blu:#8CCFDD; --sh:#141A18;
+}}
+:root[data-theme="dark"]{
+  --mat:#1C2320; --mat-2:#26302C; --ink:#EEF0E6; --ink-2:#AEB8AE; --panel:#242C29; --line:#4A5750; --soft:#2B3431;
+  --red:#FF9C85; --grn:#8FD49A; --blu:#8CCFDD; --sh:#141A18;
+}
+body{background-image:none}
+h1,h2,h3{font-family:var(--pop)}
+.logo::before,.play::before,.brick::before{content:none}
+
+/* ヘッダー */
+.logo{background:var(--p-yel); color:var(--pk); font-family:var(--pop); font-weight:900; border:1.5px solid var(--pk);
+  border-radius:8px; box-shadow:3px 3px var(--pk); transform:rotate(-3deg)}
+.hd h1{font-weight:900}
+.live{color:var(--red); border-color:var(--red); border-width:1.5px; border-radius:30px}
+.live i{background:var(--red)}
+
+/* コンセプト */
+.concept{border:1.2px solid #8D9C86; border-radius:20px; box-shadow:5px 6px var(--sh); padding:26px 28px 22px}
+.concept h2{font-weight:900; text-shadow:2px 3px color-mix(in srgb,var(--p-yel) 45%,transparent)}
+.steps li::before{background:var(--p-yel); color:var(--pk); border:1.5px solid var(--pk); transform:translateY(3px) rotate(-8deg);
+  box-shadow:2px 2px var(--sh); font-family:var(--pop); font-weight:900}
+.steps li:nth-child(2)::before{background:var(--p-blu)}
+.steps li:nth-child(3)::before{background:var(--p-grn)}
+.steps em{background:var(--p-cor); color:var(--pk); border:1.5px solid var(--pk); box-shadow:2px 2px var(--pk)}
+.steps em.g{background:var(--p-grn)}
+.concept .joke{color:var(--red)}
+
+/* 版のタブ */
+.tab{border:1.5px solid var(--ink); border-radius:13px; box-shadow:3px 3px var(--sh)}
+.tab b{font-family:var(--pop); font-weight:900}
+.tab:active{transform:translate(2px,2px); box-shadow:1px 1px var(--sh)}
+.tab[aria-pressed="true"]{background:var(--p-blu); color:var(--pk); border-color:var(--pk); box-shadow:3px 3px var(--pk)}
+.tab .new{background:var(--p-cor); color:var(--pk); border:1px solid var(--pk); border-radius:20px}
+
+/* 交渉の舞台 */
+.stage,.box{border:1.2px solid #8D9C86; border-radius:20px; box-shadow:5px 6px var(--sh)}
+.ctl{background:var(--mat-2); border-bottom:1px dashed var(--line)}
+.play{background:var(--p-grn); color:var(--pk); border:2px solid var(--pk); border-radius:16px; box-shadow:4px 4px var(--pk);
+  font-family:var(--pop); font-weight:900}
+.play.idle::after{border-color:var(--pk); border-width:3px; border-radius:20px}
+.play.stop{background:var(--p-cor); box-shadow:4px 4px var(--pk)}
+.play:active,.play.stop:active{transform:translate(3px,3px); box-shadow:1px 1px var(--pk)}
+.fab:active{transform:translate(calc(-50% + 3px),3px)}
+@media (max-width:560px){ .fab:active{transform:translate(3px,3px)} }
+.ghost{border:1.5px solid var(--ink); border-radius:30px}
+.bar{background:color-mix(in srgb,var(--line) 45%,transparent)}
+.bar i{background:var(--p-cor); border-right:1.5px solid var(--pk)}
+.legal{background:var(--p-yel); color:var(--pk); border:1.5px solid var(--pk); border-radius:14px; box-shadow:3px 3px var(--pk)}
+.legal b{font-family:var(--pop); font-weight:900}
+.players{background:linear-gradient(180deg,color-mix(in srgb,var(--p-grn) 35%,var(--panel)),var(--panel))}
+.who b{font-family:var(--pop); font-weight:900}
+.who svg{width:78px; height:78px; padding:6px 8px 0; background:var(--p-yel); border:2px solid var(--pk); border-radius:50%; box-shadow:3px 3px var(--sh)}
+.who:last-child svg{background:var(--p-blu)}
+
+/* 吹き出し：佐藤＝クリーム、池田＝水色 */
+.brick{border:1.5px solid var(--pk); border-radius:18px; color:var(--pk)}
+.brick.y{background:var(--p-cream); color:var(--pk); box-shadow:3px 3px var(--sh)}
+.brick.b{background:var(--p-blu); color:var(--pk); box-shadow:3px 3px var(--sh)}
+.row:not(.r) .brick{border-top-left-radius:4px}
+.row.r .brick{border-top-right-radius:4px}
+.brick.sel{outline:3px solid var(--red); outline-offset:4px}
+.heat{background:var(--p-cor); color:var(--pk); border:1.5px solid var(--pk); box-shadow:2px 2px var(--pk)}
+.chg{color:var(--grn); background:color-mix(in srgb,var(--p-grn) 35%,var(--panel)); border:1px dashed var(--grn); border-radius:10px}
+.scene{border-radius:16px}
+.scene dt{font-family:var(--pop)}
+.endcard{border-radius:16px}
+
+/* みんなのツッコミ */
+.box>h2{background:var(--mat-2); border-bottom:1px dashed var(--line); font-weight:900}
+.quote{border-left-color:var(--p-yel); background:color-mix(in srgb,var(--p-yel) 16%,transparent); border-radius:0 10px 10px 0; padding:8px 12px}
+.f textarea,.f input{background:var(--panel); border:1.5px solid #879779; border-radius:10px}
+.send{background:var(--p-blu); color:var(--pk); border:2px solid var(--pk); border-radius:30px; box-shadow:3px 3px var(--pk); font-family:var(--pop); font-weight:900}
+.send:active{transform:translate(2px,2px); box-shadow:1px 1px var(--pk)}
+.resume{background:var(--p-grn); color:var(--pk); border:2px solid var(--pk); border-radius:30px; box-shadow:3px 3px var(--pk); font-family:var(--pop); font-weight:900}
+.resume:active{transform:translate(2px,2px); box-shadow:1px 1px var(--pk)}
+.sortbar button{border-width:1.5px}
+.sortbar button[aria-pressed="true"]{background:var(--p-yel); color:var(--pk); border-color:var(--pk)}
+.filter{background:color-mix(in srgb,var(--p-yel) 45%,var(--panel)); border:1px solid var(--pk); border-radius:12px}
+.c{border-left:4px solid var(--p-blu)}
+.c.mine{border-left-color:var(--p-cor)}
+.c.hit{background:color-mix(in srgb,var(--p-yel) 30%,transparent); border-left-color:var(--p-yel)}
+.votes button{border:1.5px solid var(--line); background:var(--panel)}
+.votes button[aria-pressed="true"].up{background:var(--p-grn); border-color:var(--pk); color:var(--pk)}
+.votes button[aria-pressed="true"].dn{background:var(--p-pnk); border-color:var(--pk); color:var(--pk)}
+.tag{border-radius:20px}
+.tag.ok{background:var(--p-grn); color:var(--pk); border:1px solid var(--pk)}
+
+/* 下段 */
+.adopt .next{background:color-mix(in srgb,var(--p-cor) 30%,var(--panel)); border-left-color:var(--p-cor); border-radius:0 12px 12px 0}
+thead th{font-family:var(--pop); font-weight:900}
+.cur{background:color-mix(in srgb,var(--p-blu) 30%,transparent)}</style>
 
 <div class="wrap">
   <div class="hd">
