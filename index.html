@@ -103,10 +103,10 @@ button{font-family:inherit; touch-action:manipulation}
 .play:active{transform:translateY(5px); box-shadow:0 1px 0 var(--grn-d)}
 .play.stop:active{box-shadow:0 1px 0 var(--red-d)}
 /* 画面の下に浮かぶ STOP（上の再生ボタンが見えないときだけ出す） */
-.fab{position:fixed; left:50%; bottom:22px; transform:translateX(-50%); z-index:50;
+/* 中央寄せは transform を使わない（押したときの沈み込みの transform と衝突してクリックが外れるため） */
+.fab{position:fixed; left:0; right:0; margin-inline:auto; width:max-content; bottom:22px; z-index:50;
   font-size:30px; padding:20px 56px 21px; min-width:260px}
-.fab:active{transform:translate(-50%,5px)}
-@media (max-width:560px){ .fab{width:auto; left:16px; right:16px; transform:none} .fab:active{transform:translateY(5px)} }
+@media (max-width:560px){ .fab{width:auto; left:16px; right:16px; min-width:0} }
 .play:focus-visible,.ghost:focus-visible{outline:3px solid var(--ink); outline-offset:3px}
 .ghost{background:transparent; color:var(--ink); border:2px solid var(--line); border-radius:8px;
   padding:10px 16px; font-size:15px; font-weight:700; cursor:pointer}
@@ -304,8 +304,6 @@ h1,h2,h3{font-family:var(--pop)}
 .play.idle::after{border-color:var(--pk); border-width:3px; border-radius:20px}
 .play.stop{background:var(--p-cor); box-shadow:4px 4px var(--pk)}
 .play:active,.play.stop:active{transform:translate(3px,3px); box-shadow:1px 1px var(--pk)}
-.fab:active{transform:translate(calc(-50% + 3px),3px)}
-@media (max-width:560px){ .fab:active{transform:translate(3px,3px)} }
 .ghost{border:1.5px solid var(--ink); border-radius:30px}
 .bar{background:color-mix(in srgb,var(--line) 45%,transparent)}
 .bar i{background:var(--p-cor); border-right:1.5px solid var(--pk)}
