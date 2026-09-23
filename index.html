@@ -75,6 +75,11 @@ button{font-family:inherit}
   animation:ring 1.8s ease-out infinite; pointer-events:none}
 @keyframes ring{0%{opacity:.9; transform:scale(1)}100%{opacity:0; transform:scale(1.12)}}
 @media (prefers-reduced-motion:reduce){ .play.idle::after{animation:none; opacity:.6} }
+/* 法令の前提（交渉画面の上に常時表示） */
+.legal{margin:16px 20px 0; background:var(--yel); color:#17181C; border-radius:9px; box-shadow:0 5px 0 var(--yel-d);
+  padding:12px 18px 13px; line-height:1.55}
+.legal b{display:block; font-family:"M PLUS Rounded 1c",sans-serif; font-size:clamp(18px,2.2vw,22px); font-weight:800}
+.legal span{font-size:14px}
 .scene .play{display:block; margin:6px auto 0; font-size:30px; padding:22px 48px 23px}
 .scene .lead{text-align:center; font-size:15px; color:var(--ink-2); margin:12px 0 0}
 @media (max-width:560px){ .play{width:100%; min-width:0} }
@@ -224,7 +229,7 @@ td.b{color:var(--red)} td.g{color:var(--grn); font-weight:700} td.m{color:var(--
     <h2>プロの調達担当者がツッコミを入れると、交渉は進化するのか？</h2>
     <p>新人バイヤー・池田の交渉を公開しています。「おい！」と思ったら止めて、ツッコミを入れてください。評価の高いツッコミを採用して、交渉を書き直していきます。それを何度か繰り返して、本当に上手くなるのかを確かめる実験です。何回まで続くかは、みなさんのツッコミ次第です。</p>
     <p>もし、ツッコミを入れても上手くならなかったら──それも、この実験の答えです。</p>
-    <p class="joke">※ セクハラ・パワハラなツッコミは採用しません。それを取引先で言ったら、公取委より先に人事部が飛んできます。IPアドレスも記録しています。</p>
+    <p class="joke">※ ジョーク・ユーモアのあるツッコミは大歓迎です。ただし、セクハラ・パワハラなツッコミは採用しません。それを取引先で言ったら、公取委より先に人事部が飛んできます。IPアドレスも記録しています。</p>
     <p class="small">ツッコミは順次、交渉に反映します。次の反映までは、ほかの人のツッコミを読んで 👍👎 で評価できます。採用されたツッコミは、お名前と一緒に交渉の中に表示されます。</p>
     <p class="tiny">登場する企業・人物・数値はすべて架空です。</p>
   </div>
@@ -240,6 +245,10 @@ td.b{color:var(--red)} td.g{color:var(--grn); font-weight:700} td.m{color:var(--
           <div class="bar"><i id="prog"></i></div>
           <div class="hint" id="hint">再生を押すと交渉が始まります。</div>
         </div>
+      </div>
+      <div class="legal">
+        <b>⚖ この取引は、取適法（旧・下請法）の対象外です</b>
+        <span>相手は大手化学メーカーで、池田の会社より大きい売り手。独禁法の「優越的地位の濫用」も問題になりません。値上げを受けるかどうかは、純粋に交渉の腕の勝負です。</span>
       </div>
       <div class="players">
         <div class="who">
