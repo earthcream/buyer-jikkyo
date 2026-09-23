@@ -33,7 +33,7 @@ body{
 }
 .wrap{max-width:1240px; margin:0 auto; padding-inline:16px; padding-block:28px 72px}
 h1,h2,h3{font-family:"M PLUS Rounded 1c","Noto Sans JP",sans-serif; text-wrap:balance}
-button{font-family:inherit}
+button{font-family:inherit; touch-action:manipulation}
 
 .hd{display:flex; align-items:center; gap:14px; flex-wrap:wrap}
 .logo{background:var(--red); color:#fff; font-family:"M PLUS Rounded 1c",sans-serif; font-weight:800;
@@ -905,14 +905,17 @@ function endCard(instant){
   script.appendChild(d);
   if(!instant){ script.scrollTop=script.scrollHeight; }
 }
+// STOP の直後は再生を受け付けない（ダブルクリックで STOP →「続きから」と連続で押されるのを防ぐ）
+var stopGuard=0;
 function play(){
+  if(Date.now()<stopGuard){ return; }
   if(idx>=lines().length){ var keep=target; reset(); target=keep; updateComposer(); }
   playing=true; setBtn();
   $("sentNote").hidden=true;
   $("hint").textContent="再生中。おかしいと思ったら ■ STOP か、その吹き出しを押してください。";
   step();
 }
-function stopNow(){ playing=false; clearTimeout(timer); setBtn(); }
+function stopNow(){ if(playing){ stopGuard=Date.now()+900; } playing=false; clearTimeout(timer); setBtn(); }
 function showAll(){
   stopNow();
   while(idx<lines().length){ renderLine(idx++,true); }
