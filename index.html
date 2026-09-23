@@ -1,3 +1,7 @@
+<!DOCTYPE html>
+<html lang="ja">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>池田史子の交渉ライブ</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -596,7 +600,8 @@ function totalMs(){ return lines().reduce(function(a,L){return a+dur(L)},0); }
 var btnVisible=true;
 function setFab(){ $("fabStop").hidden=!(playing && !btnVisible); }
 if("IntersectionObserver" in window){
-  new IntersectionObserver(function(es){ btnVisible=es[0].isIntersecting; setFab(); }).observe($("playBtn"));
+  // 少しでも欠けたら「見えない」扱い
+  new IntersectionObserver(function(es){ btnVisible=es[0].intersectionRatio>=0.99; setFab(); },{threshold:[0,0.99,1]}).observe($("playBtn"));
 }
 function setBtn(){
   setFab();
