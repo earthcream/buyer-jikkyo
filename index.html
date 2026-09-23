@@ -50,8 +50,14 @@ button{font-family:inherit}
 .concept{background:var(--panel); border:2px solid var(--line); border-radius:11px; padding:22px 24px 20px; margin:22px 0 20px}
 .concept h2{font-size:clamp(22px,3.2vw,30px); line-height:1.45; margin:0 0 12px; font-weight:800}
 .concept p{margin:0 0 10px; max-width:62em}
-.concept .call{font-size:clamp(19px,2.2vw,23px); font-weight:700; line-height:1.6}
-.concept .call em{font-style:normal; color:#fff; background:var(--red); border-radius:6px; padding:1px 10px 2px; white-space:nowrap}
+/* 遊び方の3ステップ */
+.steps{margin:4px 0 14px; padding:0; list-style:none; display:flex; flex-direction:column; gap:8px; counter-reset:st}
+.steps li{counter-increment:st; display:flex; gap:12px; align-items:baseline; font-size:clamp(17px,2vw,21px); font-weight:700; line-height:1.6}
+.steps li::before{content:counter(st); flex:none; width:30px; height:30px; border-radius:50%; background:var(--ink); color:var(--panel);
+  font-family:"M PLUS Rounded 1c",sans-serif; font-size:17px; display:inline-grid; place-items:center; transform:translateY(3px)}
+.steps em{font-style:normal; color:#fff; background:var(--red); border-radius:6px; padding:1px 10px 2px; white-space:nowrap}
+.steps em.g{background:var(--grn)}
+.tabs-lead{font-size:15px; color:var(--ink-2); margin:0 0 8px}
 .concept .joke{font-size:15px; color:var(--red); font-weight:700}
 .concept .small{font-size:15px; color:var(--ink-2)}
 .concept .tiny{font-size:13px; color:var(--ink-2); margin:0}
@@ -179,6 +185,15 @@ button{font-family:inherit}
 .send:active{transform:translateY(4px); box-shadow:0 1px 0 var(--blu-d)}
 .send:focus-visible{outline:3px solid var(--ink); outline-offset:3px}
 .demo{font-size:13px; color:var(--ink-2); margin:2px 0 0}
+/* 送信後の確認と、続きの再生ボタン（ツッコミ欄の中） */
+.sent{font-size:15px; font-weight:700; color:var(--grn); margin:12px 0 0}
+.resume{display:block; width:100%; margin-top:14px; font-family:"M PLUS Rounded 1c",sans-serif; font-weight:800; font-size:19px;
+  background:var(--grn); color:#fff; border:0; border-radius:9px; padding:13px 16px 14px; box-shadow:0 5px 0 var(--grn-d); cursor:pointer}
+.resume:active{transform:translateY(4px); box-shadow:0 1px 0 var(--grn-d)}
+.resume:focus-visible{outline:3px solid var(--ink); outline-offset:3px}
+/* 交渉の終わりの案内 */
+.endcard{background:var(--soft); border:2px dashed var(--line); border-radius:10px; padding:14px 18px; text-align:center;
+  font-size:15.5px; font-weight:700; color:var(--ink-2); line-height:1.7}
 
 .sortbar{display:flex; gap:6px; padding:10px 18px 0}
 .sortbar button{border:2px solid var(--line); background:transparent; color:var(--ink-2); border-radius:20px;
@@ -238,13 +253,18 @@ td.b{color:var(--red)} td.g{color:var(--grn); font-weight:700} td.m{color:var(--
 
   <div class="concept">
     <h2>プロの調達担当者がツッコミを入れると、交渉は進化するのか？</h2>
-    <p class="call">新人バイヤー池田の交渉を見て、おかしいと思ったら <em>■ STOP</em> を押して、ツッコんでください！</p>
+    <ol class="steps">
+      <li><span><em class="g">▶ 再生</em> を押して、新人バイヤー池田の交渉を見る</span></li>
+      <li><span>おかしいと思ったら <em>■ STOP</em> を押す（再生中に出ます）</span></li>
+      <li><span>「みんなのツッコミ」欄に書いて送る。ほかの人のツッコミには 👍👎 を</span></li>
+    </ol>
     <p>いいツッコミを採用して、交渉を書き直していきます。本当に上手くなるのか？　上手くならなかったら、それも実験の答えです。</p>
     <p class="joke">※ ジョーク・ユーモアのあるツッコミは大歓迎です。ただし、セクハラ・パワハラなツッコミは採用しません。それを取引先で言ったら、公取委より先に人事部が飛んできます。IPアドレスも記録しています。</p>
-    <p class="small">ツッコミは順次、交渉に反映します。次の反映までは、ほかの人のツッコミを読んで 👍👎 で評価できます。採用されたツッコミは、お名前と一緒に交渉の中に表示されます。</p>
+    <p class="small">反映は順次行います。採用されたツッコミは、お名前と一緒に交渉の中に表示されます。</p>
     <p class="tiny">登場する企業・人物・数値はすべて架空です。</p>
   </div>
 
+  <p class="tabs-lead" id="tabsLead"></p>
   <div class="tabs" id="tabs"></div>
 
   <div class="cols">
@@ -312,6 +332,8 @@ td.b{color:var(--red)} td.g{color:var(--grn); font-weight:700} td.m{color:var(--
             <button class="send" id="sendBtn" type="button">ツッコミを送る</button>
             <p class="demo" id="demoNote">試作版です。投稿はあなたの画面にだけ表示され、送信はされません。</p>
           </div>
+          <p class="sent" id="sentNote" hidden>✓ 送信しました。ありがとうございます！</p>
+          <button class="resume" id="resumeBtn" type="button" hidden>▶ 交渉の続きを再生</button>
         </div>
         <div class="sortbar" id="sortbar" role="group" aria-label="並び順">
           <button type="button" id="sTop" aria-pressed="true">評価順</button>
@@ -514,6 +536,8 @@ var SCORE=[
 function $(id){return document.getElementById(id)}
 function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c];})}
 function num(n){return (n+1<10?"0":"")+(n+1)}
+// 名前に「さん」を付ける（「おっさん」などで二重にならないように）
+function san(n){ return /さん$/.test(n)?n:n+"さん"; }
 
 var votes={};
 try{ votes=JSON.parse(localStorage.getItem("bj-votes")||"{}")||{}; }catch(e){ votes={}; }
@@ -561,6 +585,7 @@ function renderTabs(){
   }
   h+='<button type="button" class="tab" disabled><b>#'+(LATEST+1)+'</b>次の版<br>みなさんのツッコミ次第</button>';
   $("tabs").innerHTML=h;
+  $("tabsLead").textContent="見る版を選べます。ツッコめるのは最新の #"+LATEST+" だけです（#1 は元の交渉。見比べると変化がわかります）。";
   Array.prototype.forEach.call(document.querySelectorAll(".tab[data-v]"),function(b){
     b.addEventListener("click",function(){ selectVersion(+b.getAttribute("data-v")); });
   });
@@ -579,7 +604,7 @@ function renderScore(){
 function renderAdopt(){
   var v=V[cur], items=[];
   v.lines.forEach(function(L,n){
-    if(L[2]){ items.push('<li><b>'+esc(L[2][0])+'さん</b>（#'+(cur-1)+' への指摘）「'+esc(L[2][1])+'」<small>→ #'+cur+' の '+num(n)+' 行目の発言を変えました</small></li>'); }
+    if(L[2]){ items.push('<li><b>'+esc(san(L[2][0]))+'</b>（#'+(cur-1)+' への指摘）「'+esc(L[2][1])+'」<small>→ #'+cur+' の '+num(n)+' 行目の発言を変えました</small></li>'); }
   });
   var h;
   if(items.length){ h='<ol>'+items.join("")+'</ol>'; }
@@ -591,14 +616,25 @@ function renderAdopt(){
 function sceneCard(){
   script.innerHTML='<div class="scene"><dl><dt>場面</dt><dd>'+esc(SCENE.place)+'</dd><dt>争点</dt><dd>'+esc(SCENE.issue)+'</dd><dt>この版</dt><dd>#'+cur+'　'+esc(V[cur].desc)+'</dd></dl>'+
     '<button type="button" class="play idle" id="scenePlay">▶ 交渉を再生する</button>'+
-    '<p class="lead">全'+lines().length+'行・約'+Math.round(totalMs()/60000)+'分。「おい！」と思ったら、いつでも止められます。</p></div>';
+    '<p class="lead">全'+lines().length+'行・再生時間 約'+Math.round(totalMs()/60000)+'分。'+(archived()?'#1 は元の交渉です。見るだけで、ツッコミは最新の #'+LATEST+' にどうぞ。':'おかしいと思ったら、再生中に出る ■ STOP で止めてツッコんでください。')+'</p></div>';
   $("scenePlay").addEventListener("click",play);
 }
 function dur(L){ return Math.min(3800, 900+L[1].length*42); }
 function totalMs(){ return lines().reduce(function(a,L){return a+dur(L)},0); }
-// 再生中に上の STOP が画面外なら、下に浮かぶ STOP を出す
+// 上の再生ボタンが画面外なら、下に浮かぶボタンを出す（再生中は STOP、途中で止めたら「続きから」）
+// 途中で止めたときは、ツッコミ欄の中にも「続きを再生」ボタンを出す
 var btnVisible=true;
-function setFab(){ $("fabStop").hidden=!(playing && !btnVisible); }
+function midway(){ return !playing && idx>0 && idx<lines().length; }
+function setFab(){
+  var f=$("fabStop"), mid=midway();
+  f.hidden=btnVisible || !(playing || (mid && window.innerWidth>=900));
+  f.textContent=playing?"■ STOP":"▶ 続きから";
+  f.classList.toggle("stop",playing);
+  var r=$("resumeBtn");
+  r.hidden=!mid;
+  if(mid){ r.textContent="▶ 交渉の続きを再生（"+num(idx)+"行目から）"; }
+}
+window.addEventListener("resize",setFab);
 if("IntersectionObserver" in window){
   // 少しでも欠けたら「見えない」扱い
   new IntersectionObserver(function(es){ btnVisible=es[0].intersectionRatio>=0.99; setFab(); },{threshold:[0,0.99,1]}).observe($("playBtn"));
@@ -627,7 +663,8 @@ function reset(){
   setFormEnabled(!archived());
   sceneCard(); renderFeed(); updateCount(); updateComposer();
   $("prog").style.width="0%";
-  $("hint").textContent="再生を押すと交渉が始まります。";
+  $("sentNote").hidden=true;
+  $("hint").textContent="▶ 再生 を押すと交渉が始まります。";
   setBtn();
 }
 function selectVersion(k){
@@ -639,7 +676,7 @@ function setHeat(n,shake){
   var r=rowEls[n]; if(!r){return}
   var cnt=countFor(n), br=r.querySelector(".brick"), h=br.querySelector(".heat");
   if(!cnt){ if(h){h.remove()} return; }
-  if(!h){ h=document.createElement("span"); h.className="heat"; br.appendChild(h); }
+  if(!h){ h=document.createElement("span"); h.className="heat"; h.title="この発言へのツッコミの数"; br.appendChild(h); }
   h.textContent="🔥 "+cnt;
   if(shake){ h.classList.remove("hot"); void h.offsetWidth; h.classList.add("hot"); }
 }
@@ -692,7 +729,7 @@ function renderFeed(newId){
     d.setAttribute("data-id",c.id);
     d.innerHTML='<div class="m"><b>'+esc(c.name)+'</b>'+(c.org?'<span>'+esc(c.org)+'</span>':'')+
       '<span class="ln">'+(c.line===null?"全体":num(c.line)+"行目")+'</span>'+
-      (LIVE&&c.seed?'<span class="tag seed">見本</span>':'')+(c.adopted?'<span class="tag ok">採用</span>':'')+'</div>'+esc(c.text)+
+      (LIVE&&c.seed?'<span class="tag seed" title="運営が用意した、ツッコミの例です">見本</span>':'')+(c.adopted?'<span class="tag ok">採用</span>':'')+'</div>'+esc(c.text)+
       '<div class="votes"><button type="button" class="up" aria-pressed="'+(v===1)+'">👍 いいね '+up+'</button>'+
       '<button type="button" class="dn" aria-pressed="'+(v===-1)+'">👎 イマイチ '+dn+'</button></div>';
     d.querySelector(".up").addEventListener("click",function(){ vote(c.id,1); });
@@ -728,7 +765,7 @@ function renderLine(n,instant){
   var row=document.createElement("div");
   row.className="row"+(me?" r":"")+(instant?" now":"");
   var h='<div class="unit"><button type="button" class="brick '+(me?"b":"y")+'"><span class="n">'+num(n)+'</span>'+esc(L[1])+'</button>';
-  if(L[2]){ h+='<div class="chg">✎ #'+(cur-1)+' への '+esc(L[2][0])+'さんの指摘「'+esc(L[2][1])+'」を受けて変えました</div>'; }
+  if(L[2]){ h+='<div class="chg">✎ #'+(cur-1)+' への '+esc(san(L[2][0]))+'の指摘「'+esc(L[2][1])+'」を受けて変えました</div>'; }
   row.innerHTML=h+'</div>';
   row.querySelector(".brick").addEventListener("click",function(){ selectTarget(n); });
   var sc=script.querySelector(".scene"); if(sc){ sc.remove(); }
@@ -740,21 +777,31 @@ function renderLine(n,instant){
 }
 function step(){
   if(!playing){return}
-  if(idx>=lines().length){ playing=false; setBtn();
-    $("hint").textContent=archived()?"終了しました。最新の #"+LATEST+" と比べてみてください。":"終了しました。気になる発言を押せば、いつでもツッコめます。"; return; }
+  if(idx>=lines().length){ playing=false; setBtn(); endCard(false);
+    $("hint").textContent=archived()?"終了しました。最新の #"+LATEST+" と比べてみてください。":"終了しました。気になる吹き出しを押せば、その発言にツッコめます。"; return; }
   var L=lines()[idx]; renderLine(idx++,false);
   timer=setTimeout(step, dur(L));
+}
+// 交渉の最後に「ここまで」の案内を出す
+function endCard(instant){
+  if(script.querySelector(".endcard")){ return; }
+  var d=document.createElement("div"); d.className="endcard";
+  d.textContent=archived()?"― 元の交渉はここまで ―　最新の #"+LATEST+" と見比べてみてください。":"― 交渉はここまで ―　気になった吹き出しを押すと、その発言にツッコめます。";
+  script.appendChild(d);
+  if(!instant){ script.scrollTop=script.scrollHeight; }
 }
 function play(){
   if(idx>=lines().length){ var keep=target; reset(); target=keep; updateComposer(); }
   playing=true; setBtn();
-  $("hint").textContent="再生中。「おい！」と思ったら STOP か、その吹き出しを押してください。";
+  $("sentNote").hidden=true;
+  $("hint").textContent="再生中。おかしいと思ったら ■ STOP か、その吹き出しを押してください。";
   step();
 }
 function stopNow(){ playing=false; clearTimeout(timer); setBtn(); }
 function showAll(){
   stopNow();
   while(idx<lines().length){ renderLine(idx++,true); }
+  endCard(true);
   setBtn();
   script.scrollTop=0;
   $("hint").textContent=archived()?"全文を表示しました。":"全文を表示しました。発言を押すと、そこへのツッコミが見られます。";
@@ -763,9 +810,9 @@ function updateComposer(){
   var q=$("compQuote");
   Array.prototype.forEach.call(script.querySelectorAll(".brick.sel"),function(b){ b.classList.remove("sel"); });
   if(archived()){ q.textContent="#1 は元の交渉です。ツッコミは最新の #"+LATEST+" にどうぞ。"; q.classList.remove("on"); return; }
-  if(target===null){ q.textContent="再生中に STOP を押すか、吹き出しを押すと、その発言にツッコめます。"; q.classList.remove("on"); return; }
+  if(target===null){ q.textContent="▶ 再生して、おかしいと思ったところで ■ STOP を押すと、その発言にツッコめます（吹き出しを押しても選べます）。発言を選ばずに送ると、交渉全体へのツッコミになります。"; q.classList.remove("on"); return; }
   var L=lines()[target];
-  q.textContent=num(target)+"行目　"+(L[0]==="b"?"池田":"佐藤")+"「"+L[1]+"」";
+  q.textContent="ツッコむ発言："+num(target)+"行目　"+(L[0]==="b"?"池田":"佐藤")+"「"+L[1]+"」（別の発言にするなら、その吹き出しを押す）";
   q.classList.add("on");
   if(rowEls[target]){ rowEls[target].querySelector(".brick").classList.add("sel"); }
 }
@@ -773,7 +820,8 @@ function selectTarget(n){
   stopNow();
   if(archived()){ $("hint").textContent="#1 はツッコミの受付を終えています。最新の #"+LATEST+" でどうぞ。"; return; }
   target=n; filterLine=n; updateComposer(); renderFeed();
-  $("hint").textContent="停止中。この発言へのツッコミを「みんなのツッコミ」に出しました。評価するか、あなたも書いてください。";
+  $("sentNote").hidden=true;
+  $("hint").textContent="停止中。「みんなのツッコミ」欄に書いて送ってください。この発言へのほかの人のツッコミも出ています。続きは「▶ 続きから」。";
   if(window.innerWidth<900){ $("compBox").scrollIntoView({behavior:"smooth",block:"start"}); }
   $("tsukkomi").focus({preventScroll:window.innerWidth>=900});
 }
@@ -781,8 +829,12 @@ $("playBtn").addEventListener("click",function(){
   if(playing){ selectTarget(Math.max(0,idx-1)); } else { play(); }
 });
 $("fabStop").addEventListener("click",function(){
-  if(playing){ selectTarget(Math.max(0,idx-1)); }
-  if(window.innerWidth>=900){ $("playBtn").scrollIntoView({behavior:"smooth",block:"start"}); }
+  if(playing){ selectTarget(Math.max(0,idx-1)); } else { play(); }
+});
+// ツッコミ欄の「続きを再生」：再生して、交渉の画面が見えるところまで戻す
+$("resumeBtn").addEventListener("click",function(){
+  play();
+  script.scrollIntoView({behavior:"smooth",block:"nearest"});
 });
 $("allBtn").addEventListener("click",showAll);
 $("sTop").addEventListener("click",function(){ sortMode="top"; this.setAttribute("aria-pressed","true"); $("sLine").setAttribute("aria-pressed","false"); renderFeed(); });
@@ -803,7 +855,9 @@ $("sendBtn").addEventListener("click",function(){
       var mc={id:res.id,name:nm,org:org,text:t,up:0,down:0,line:line,mine:true,t:Date.now()};
       pending.push(mc); rebuild(); updateCount(); renderFeed(mc.id); refreshHeat();
       $("tsukkomi").value="";
-      $("hint").textContent="送信しました。みんなの画面にも表示されます。";
+      $("sentNote").textContent="✓ 送信しました。みんなの画面にも表示されます。";
+      $("sentNote").hidden=false;
+      $("hint").textContent="送信しました。続きは「▶ 続きから」。";
     },function(err){
       btn.disabled=false; btn.textContent="ツッコミを送る";
       $("hint").textContent=errMsg(err,"送信できませんでした。通信状況を確かめて、もう一度押してください。");
@@ -814,7 +868,9 @@ $("sendBtn").addEventListener("click",function(){
   mine.push(c); shown.push(c); updateCount(); renderFeed(c.id);
   if(target!==null){ setHeat(target,true); }
   $("tsukkomi").value="";
-  $("hint").textContent="送信しました（試作版のため、あなたの画面にだけ表示されています）。";
+  $("sentNote").textContent="✓ 送信しました（試作版のため、あなたの画面にだけ表示されています）。";
+  $("sentNote").hidden=false;
+  $("hint").textContent="送信しました。続きは「▶ 続きから」。";
 });
 /* 本番：シートから最新のツッコミと票数を読み込む */
 function fetchFeed(){
