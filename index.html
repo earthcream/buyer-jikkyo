@@ -46,6 +46,8 @@ button{font-family:inherit}
 .concept{background:var(--panel); border:2px solid var(--line); border-radius:11px; padding:22px 24px 20px; margin:22px 0 20px}
 .concept h2{font-size:clamp(22px,3.2vw,30px); line-height:1.45; margin:0 0 12px; font-weight:800}
 .concept p{margin:0 0 10px; max-width:62em}
+.concept .call{font-size:clamp(19px,2.2vw,23px); font-weight:700; line-height:1.6}
+.concept .call em{font-style:normal; color:#fff; background:var(--red); border-radius:6px; padding:1px 10px 2px; white-space:nowrap}
 .concept .joke{font-size:15px; color:var(--red); font-weight:700}
 .concept .small{font-size:15px; color:var(--ink-2)}
 .concept .tiny{font-size:13px; color:var(--ink-2); margin:0}
@@ -90,6 +92,11 @@ button{font-family:inherit}
 .play.stop::before{background-image:radial-gradient(ellipse 11px 7px at 50% 100%, var(--red) 0 99%, transparent 100%)}
 .play:active{transform:translateY(5px); box-shadow:0 1px 0 var(--grn-d)}
 .play.stop:active{box-shadow:0 1px 0 var(--red-d)}
+/* 画面の下に浮かぶ STOP（上の再生ボタンが見えないときだけ出す） */
+.fab{position:fixed; left:50%; bottom:22px; transform:translateX(-50%); z-index:50;
+  font-size:30px; padding:20px 56px 21px; min-width:260px}
+.fab:active{transform:translate(-50%,5px)}
+@media (max-width:560px){ .fab{width:auto; left:16px; right:16px; transform:none} .fab:active{transform:translateY(5px)} }
 .play:focus-visible,.ghost:focus-visible{outline:3px solid var(--ink); outline-offset:3px}
 .ghost{background:transparent; color:var(--ink); border:2px solid var(--line); border-radius:8px;
   padding:10px 16px; font-size:15px; font-weight:700; cursor:pointer}
@@ -227,8 +234,8 @@ td.b{color:var(--red)} td.g{color:var(--grn); font-weight:700} td.m{color:var(--
 
   <div class="concept">
     <h2>プロの調達担当者がツッコミを入れると、交渉は進化するのか？</h2>
-    <p>新人バイヤー・池田の交渉を公開しています。「おい！」と思ったら止めて、ツッコミを入れてください。評価の高いツッコミを採用して、交渉を書き直していきます。それを何度か繰り返して、本当に上手くなるのかを確かめる実験です。何回まで続くかは、みなさんのツッコミ次第です。</p>
-    <p>もし、ツッコミを入れても上手くならなかったら──それも、この実験の答えです。</p>
+    <p class="call">新人バイヤー池田の交渉を見て、おかしいと思ったら <em>■ STOP</em> を押して、ツッコんでください！</p>
+    <p>いいツッコミを採用して、交渉を書き直していきます。本当に上手くなるのか？　上手くならなかったら、それも実験の答えです。</p>
     <p class="joke">※ ジョーク・ユーモアのあるツッコミは大歓迎です。ただし、セクハラ・パワハラなツッコミは採用しません。それを取引先で言ったら、公取委より先に人事部が飛んできます。IPアドレスも記録しています。</p>
     <p class="small">ツッコミは順次、交渉に反映します。次の反映までは、ほかの人のツッコミを読んで 👍👎 で評価できます。採用されたツッコミは、お名前と一緒に交渉の中に表示されます。</p>
     <p class="tiny">登場する企業・人物・数値はすべて架空です。</p>
@@ -240,6 +247,7 @@ td.b{color:var(--red)} td.g{color:var(--grn); font-weight:700} td.m{color:var(--
     <div class="stage">
       <div class="ctl">
         <button class="play" id="playBtn" type="button">▶ 再生</button>
+        <button class="play stop fab" id="fabStop" type="button" hidden>■ STOP</button>
         <button class="ghost" id="allBtn" type="button">全文を表示</button>
         <div class="meter">
           <div class="bar"><i id="prog"></i></div>
@@ -584,7 +592,14 @@ function sceneCard(){
 }
 function dur(L){ return Math.min(3800, 900+L[1].length*42); }
 function totalMs(){ return lines().reduce(function(a,L){return a+dur(L)},0); }
+// 再生中に上の STOP が画面外なら、下に浮かぶ STOP を出す
+var btnVisible=true;
+function setFab(){ $("fabStop").hidden=!(playing && !btnVisible); }
+if("IntersectionObserver" in window){
+  new IntersectionObserver(function(es){ btnVisible=es[0].isIntersecting; setFab(); }).observe($("playBtn"));
+}
 function setBtn(){
+  setFab();
   var b=$("playBtn");
   b.classList.remove("idle");
   if(playing){ b.textContent="■ STOP"; b.classList.add("stop"); }
@@ -759,6 +774,10 @@ function selectTarget(n){
 }
 $("playBtn").addEventListener("click",function(){
   if(playing){ selectTarget(Math.max(0,idx-1)); } else { play(); }
+});
+$("fabStop").addEventListener("click",function(){
+  if(playing){ selectTarget(Math.max(0,idx-1)); }
+  if(window.innerWidth>=900){ $("playBtn").scrollIntoView({behavior:"smooth",block:"start"}); }
 });
 $("allBtn").addEventListener("click",showAll);
 $("sTop").addEventListener("click",function(){ sortMode="top"; this.setAttribute("aria-pressed","true"); $("sLine").setAttribute("aria-pressed","false"); renderFeed(); });
